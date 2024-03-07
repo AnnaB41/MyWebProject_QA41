@@ -3,9 +3,10 @@ package pages;
 import org.openqa.selenium.WebDriver;
 
 public class BasePage {
-
+    // BasePage служит базовым классом для всех страниц тестового приложения
     protected static WebDriver driver;
-    public static void setDriver(WebDriver webDriver){
-        driver = webDriver;
+    public static void setDriver(WebDriver webDriver){// Метод устанавливает значение поля driver в переданный экземпляр веб-драйвера.
+        driver = webDriver;//Эта строка присваивает переданный экземпляр веб-драйвера переменной driver, что позволяет другим
+        // классам иметь доступ к этому веб-драйверу через метод getDriver()
     }
 }
