@@ -42,11 +42,11 @@ public class PhoneBookTest extends BaseTest {
     @Test
     public void addUserAddContact() throws InterruptedException {
         MainPage mainPage = new MainPage(getDriver());
-        String email = EmailGenerator.generateEmail(5,3,2);
-        String password = PasswordStringGenerator.generateString();
+//        String email = EmailGenerator.generateEmail(5,3,2);
+//        String password = PasswordStringGenerator.generateString();
 //        System.out.println("Email: " + email + " Password " + password);
         LoginPage loginPage = mainPage.openTopMenu(TopMenuItem.LOGIN.toString());
-        loginPage.fillEmailField(email).fillPasswordField(password).clickByRegistrationButton();
+        loginPage.fillEmailField(EmailGenerator.generateEmail(5,3,2)).fillPasswordField(PasswordStringGenerator.generateString()).clickByRegistrationButton();
         Thread.sleep(2000);
 ////        loginPage.fillEmailField(email).fillPasswordField(password).clickByLoginButton();
 ////        Thread.sleep(2000);
