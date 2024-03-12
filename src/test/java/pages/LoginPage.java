@@ -67,8 +67,6 @@ public class LoginPage extends BasePage{
             return new LoginPage(driver);
         }
         else return new ContactsPage(driver);
-
-
     }
 
     private Alert getAlertIfPresent(){
@@ -81,4 +79,6 @@ public class LoginPage extends BasePage{
         }
 
     }
+
+
 }
