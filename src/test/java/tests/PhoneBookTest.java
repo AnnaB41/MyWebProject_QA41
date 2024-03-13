@@ -6,6 +6,7 @@ import io.qameta.allure.Allure;
 import jdk.jfr.Description;
 import model.Contact;
 import org.openqa.selenium.Alert;
+import org.openqa.selenium.support.ui.WebDriverWait;
 import org.testng.Assert;
 import org.testng.annotations.Optional;
 import org.testng.annotations.Parameters;
@@ -14,6 +15,8 @@ import pages.AddPage;
 import pages.ContactsPage;
 import pages.LoginPage;
 import pages.MainPage;
+
+import java.time.Duration;
 
 public class PhoneBookTest extends BaseTest {
 
@@ -63,7 +66,7 @@ public class PhoneBookTest extends BaseTest {
     }
 
     @Test
-    @Description("User already exist. Login and add contact.")
+    @Description("User already exist. .")
     public void loginWithValidateUser() throws InterruptedException {
         Allure.description("User already exist. Successful registration check");
         MainPage mainPage = new MainPage(getDriver());
@@ -77,5 +80,27 @@ public class PhoneBookTest extends BaseTest {
         ContactsPage contactsPage = new ContactsPage(getDriver());
         Assert.assertTrue(contactsPage.clickBySignOutButton());
     }
+
+    @Test
+    @Description("Login, remove contact.")
+    public void loginOfAnExistingUserRemoveContact() throws InterruptedException {
+        MainPage mainPage = new MainPage(getDriver());
+        LoginPage loginPage = mainPage.openTopMenu(TopMenuItem.LOGIN.toString());
+        loginPage.fillEmailField(PropertiesReader.getProperty("existingUserEmail"))
+                .fillPasswordField(PropertiesReader.getProperty("existingUserPassword"))
+                .clickByLoginButton();
+        ContactsPage contactsPage = new ContactsPage(getDriver());
+        String name1 = contactsPage.openContact();
+        System.out.println("Name of contact" + name1);
+
+        contactsPage.removeContact();
+        Thread.sleep(2000);
+        String name2 = contactsPage.findContact();
+        System.out.println("Name of new contact" + name2);
+        Assert.assertFalse(name1.equals(name2));
+
+
+    }
+
 
 }

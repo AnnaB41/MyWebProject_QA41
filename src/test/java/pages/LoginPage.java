@@ -27,6 +27,8 @@ public class LoginPage extends BasePage{
 
     @FindBy(xpath = "//button[@name='login']")
     WebElement loginButton;
+    //
+
 
     public LoginPage(WebDriver driver){
         setDriver(driver);

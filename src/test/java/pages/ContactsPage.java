@@ -17,10 +17,44 @@ public class ContactsPage extends  BasePage{
     @FindBy(xpath = "//button[contains(text(),'Sign')]")
     WebElement signOutButton;
 
+    @FindBy(xpath = "//div[@class='contact-item_card__2SOIM']")
+    WebElement contactExist;
+
+    @FindBy(xpath = "//button[text()='Remove']")
+    WebElement removeContact;
+
+    @FindBy(xpath = "//h2")
+    WebElement contactName;
+
+    @FindBy(xpath = "//h3")
+    WebElement contactPhone;
+
+
     public ContactsPage(WebDriver driver){
         setDriver(driver);
         PageFactory.initElements(new AjaxElementLocatorFactory(driver, 20), this);
     }
+
+    public String openContact() {
+        contactExist.click();
+        String namePhone = contactName.getText() + contactPhone.getText();
+        return namePhone;
+    }
+
+    public void removeContact(){
+        removeContact.click();
+    }
+
+    public String findContact() {
+
+if(contactExist != null){
+    contactExist.click();
+    String namePhoneNew = contactName.getText() + contactPhone.getText();
+    return namePhoneNew;}
+    else return "No contacts";
+
+        }
+
 
 
     public boolean clickBySignOutButton(){
