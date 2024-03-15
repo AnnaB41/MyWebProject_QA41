@@ -16,6 +16,7 @@ import pages.ContactsPage;
 import pages.LoginPage;
 import pages.MainPage;
 
+import java.io.IOException;
 import java.time.Duration;
 
 public class PhoneBookTest extends BaseTest {
@@ -98,9 +99,35 @@ public class PhoneBookTest extends BaseTest {
         String name2 = contactsPage.findContact();
         System.out.println("Name of new contact" + name2);
         Assert.assertFalse(name1.equals(name2));
-
-
     }
+
+    @Test
+    public void deleteContactApproachTwo() throws IOException {
+        String filename = "contactDataFile.ser";  //название файла, расширение ser, data, bin
+
+        MainPage mainPage = new MainPage(getDriver());
+        LoginPage loginPage = mainPage.openTopMenu(TopMenuItem.LOGIN.toString());
+        loginPage.fillEmailField(PropertiesReader.getProperty("existingUserEmail"))
+                .fillPasswordField(PropertiesReader.getProperty("existingUserPassword"))
+                .clickByLoginButton();
+
+        MainPage.openTopMenu(TopMenuItem.ADD.toString());
+        AddPage addPage = new AddPage(getDriver());
+        Contact newContact = new Contact(NameAndLastNameGenerator.generateName(), NameAndLastNameGenerator.generateLastName(),
+                PhoneNumberGenerator.generatePhoneNumber(),
+                EmailGenerator.generateEmail(10,5,3),
+                AddressGenerator.generateAddress(),
+                "Test description");
+        addPage.fillFormAndSave(newContact);
+
+        Contact.serializeContact(newContact, filename);
+        ContactsPage contactsPage = new ContactsPage(getDriver());
+
+        Contact desetContact = Contact.deserializeContact(filename);
+        Assert.assertNotEquals(contactsPage.deleteContactByPhoneNumberOrName(desetContact.getName()),
+                contactsPage.getContactsListSize());
+    }
+
 
 
 }

@@ -1,24 +1,38 @@
 package tests;
 
 import org.openqa.selenium.By;
-import org.openqa.selenium.Keys;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.firefox.FirefoxDriver;
-import org.openqa.selenium.interactions.Action;
 import org.openqa.selenium.interactions.Actions;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 import org.testng.annotations.Test;
 
 import java.time.Duration;
+import java.util.List;
+import java.util.Optional;
 import java.util.Set;
 
 public class WindowAndTabTests {
     public static void main(String[] args) throws InterruptedException {
        // switchTab();
         //sliderTest();
-        dragAndDropTest();
+      //  dragAndDropTest();
+        findRowByValue("Frank");
+        findRowByValueLambda("Frank");
+    }
+
+    public void rightMouseClick() throws InterruptedException {
+        WebDriver driver = new FirefoxDriver();//можно хромдрайвер
+        driver.get("https://the-internet.herokuapp.com/");
+        driver.manage().window().maximize();
+        WebElement element = driver.findElement(By.xpath("//[contains(text().'Testing')]"));
+        Actions actions = new Actions(driver);
+        actions.contextClick(element).perform(); // клик правой кнопкой мыши
+
+        Thread.sleep(3000);
+        driver.quit();
     }
 
     public static void sliderTest() throws InterruptedException {
@@ -93,4 +107,69 @@ public class WindowAndTabTests {
         driver.quit();
 
     }
+
+    @Test
+    public static void waitForAnElement(){ //явное ожидание wait
+        WebDriver driver = new FirefoxDriver();
+        driver.manage().window().maximize();
+        driver.get("https://the-internet.herokuapp.com/dynamic_loading/2");
+        WebElement buttonStart = driver.findElement(By.xpath("//button"));
+        buttonStart.click();
+
+//        WebElement textElement = driver.findElement(By.xpath("//div[@id='finish"));
+//        textElement.click();
+
+        WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
+        WebElement textElement = wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//div[@id='finish")));
+        textElement.click();
+
+        driver.quit();
+    }
+    @Test
+    public static String findRowByValue(String valueToFind){
+
+        WebDriver driver = new FirefoxDriver();
+        try{
+            driver.manage().window().maximize();
+            driver.get("https://the-internet.herokuapp.com/tables");
+            WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
+            WebElement tableElement = wait.until(ExpectedConditions.visibilityOfElementLocated(By.tagName("table")));
+            List<WebElement> rows = tableElement.findElements(By.tagName("tr"));
+
+            for(WebElement row : rows){
+                List<WebElement> cells = row.findElements(By.tagName("td"));
+                for(WebElement cell : cells){
+                    if(cell.getText().equals(valueToFind)){
+                        System.out.println(row.getText());
+                        return row.getText();
+                    }
+                }
+            }return null;
+        }finally {
+            driver.quit();
+        }
+    }
+
+    @Test
+    public static String findRowByValueLambda(String valueToFind){ // сложная реализация с ламбда
+
+        WebDriver driver = new FirefoxDriver();
+        try{
+            driver.manage().window().maximize();
+            driver.get("https://the-internet.herokuapp.com/tables");
+            WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
+            WebElement tableElement = wait.until(ExpectedConditions
+                    .visibilityOfElementLocated(By.tagName("table")));
+            List<WebElement> rows = tableElement.findElements(By.tagName("tr"));
+
+            Optional<WebElement> optionalRow = rows.stream()
+                    .filter(row -> row.findElements(By.tagName("td"))
+                            .stream().allMatch(cell -> cell.getText().equals(valueToFind))).findFirst();
+           return optionalRow.map(WebElement::getText).orElse(null);
+        }finally {
+            driver.quit();
+        }
+    }
+
+
 }
