@@ -7,6 +7,7 @@ public class AlertHandler {
 
     WebDriver driver;
     public AlertHandler(WebDriver driver){
+
         this.driver=driver;
     }
 

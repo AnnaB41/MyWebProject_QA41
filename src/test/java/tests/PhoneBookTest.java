@@ -128,6 +128,22 @@ public class PhoneBookTest extends BaseTest {
                 contactsPage.getContactsListSize());
     }
 
+    @Test
+    public void registrationOfAnAlreadyRegisteredUser(){
+        Allure.description("User already exist. Unsuccessful registration check");
+        MainPage mainPage = new MainPage(getDriver());
+        Allure.step("Open main page");
+        LoginPage lpage = mainPage.openTopMenu(TopMenuItem.LOGIN.toString());
+        Allure.step("Open Login page");
+        Alert alert = lpage.fillEmailField(PropertiesReader.getProperty("existingUserEmail"))
+                .fillPasswordField(PropertiesReader.getProperty("existingUserPassword"))
+                .clickByRegistrationButton();
+        Allure.step("Click by registration button");
+        String expectedString = "User already exist";
+        boolean isAlertHandled = AlertHandler.handleAlert(alert, expectedString);
+        Assert.assertTrue(isAlertHandled);
+    }
+
 
 
 }
